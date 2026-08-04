@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Restaurant Violation Leads — KC Metro sales leads from public health records</title>
+<meta name="description" content="Weekly, category-sorted sales leads for local service vendors — pest control, refrigeration repair, plumbing, and more — built from public Missouri restaurant health inspection records across the Kansas City metro.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='14' fill='%23221F16'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='%23A6311F' font-family='Georgia,serif' font-weight='700'%3ER%3C/text%3E%3C/svg%3E">
+
+<style>
+  :root {
+    --paper: #EDE3C8;
+    --paper-deep: #E0D2AC;
+    --paper-card: #F5EEDA;
+    --ink: #221F16;
+    --ink-soft: #58513C;
+    --stamp: #A6311F;
+    --stamp-deep: #7A2216;
+    --line: #C7B98E;
+    --focus: #1E5B8C;
+
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #16140D;
+      --paper-deep: #201C12;
+      --paper-card: #1C1911;
+      --ink: #EDE6D0;
+      --ink-soft: #B4A981;
+      --stamp: #E2694C;
+      --stamp-deep: #F0865F;
+      --line: #3A331F;
+      --focus: #6FB4EA;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #16140D;
+    --paper-deep: #201C12;
+    --paper-card: #1C1911;
+    --ink: #EDE6D0;
+    --ink-soft: #B4A981;
+    --stamp: #E2694C;
+    --stamp-deep: #F0865F;
+    --line: #3A331F;
+    --focus: #6FB4EA;
+  }
+  :root[data-theme="light"] {
+    --paper: #EDE3C8;
+    --paper-deep: #E0D2AC;
+    --paper-card: #F5EEDA;
+    --ink: #221F16;
+    --ink-soft: #58513C;
+    --stamp: #A6311F;
+    --stamp-deep: #7A2216;
+    --line: #C7B98E;
+    --focus: #1E5B8C;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+  .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .masthead-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 0;
+  }
+  .wordmark {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.86rem;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    white-space: nowrap;
+  }
+  .wordmark .tag {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--stamp);
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    padding: 0.1rem 0.35rem;
+  }
+  nav.primary {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  nav.primary a {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+  nav.primary a:hover { color: var(--stamp); }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    padding: 0.55rem 1.05rem;
+    border-radius: 3px;
+    border: 1px solid var(--stamp);
+    color: var(--stamp);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn.solid {
+    background: var(--stamp);
+    color: var(--paper);
+  }
+  .btn.solid:hover { background: var(--stamp-deep); border-color: var(--stamp-deep); }
+  .btn:not(.solid):hover { background: var(--stamp); color: var(--paper); }
+
+  nav.primary .btn { padding: 0.45rem 0.85rem; }
+
+  @media (max-width: 46rem) {
+    nav.primary a:not(.btn) { display: none; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    padding: 4.5rem 0 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--stamp);
+    margin: 0 0 1.1rem;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.2rem;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .hero-sub {
+    font-size: 1.12rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 46ch;
+    margin: 0 0 2rem;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2.2rem;
+  }
+  .hero-actions .btn { font-size: 0.88rem; padding: 0.75rem 1.4rem; }
+  .credibility {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    padding-top: 1.1rem;
+    max-width: 52ch;
+  }
+  .credibility b { color: var(--ink); font-weight: 500; }
+
+  .hero-stamp {
+    position: absolute;
+    top: 3.2rem;
+    right: -0.5rem;
+    width: 9.5rem;
+    height: 9.5rem;
+    border: 3px solid var(--stamp);
+    border-radius: 50%;
+    color: var(--stamp);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transform: rotate(-14deg) scale(0.6);
+    opacity: 0;
+    animation: stamp-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.35s forwards;
+  }
+  .hero-stamp span {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  @keyframes stamp-in {
+    0% { opacity: 0; transform: rotate(-14deg) scale(0.6); }
+    60% { opacity: 1; transform: rotate(-14deg) scale(1.08); }
+    100% { opacity: 1; transform: rotate(-14deg) scale(1); }
+  }
+  @media (max-width: 46rem) {
+    .hero-stamp { display: none; }
+  }
+
+  /* ---------- section shell ---------- */
+  section { padding: 3.6rem 0; border-top: 1px solid var(--line); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 2.2rem;
+  }
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--stamp);
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: 0;
+    text-wrap: balance;
+  }
+  .section-intro {
+    color: var(--ink-soft);
+    max-width: 56ch;
+    margin: -1.4rem 0 2.2rem;
+  }
+
+  /* ---------- how it works ---------- */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
+  @media (max-width: 46rem) {
+    .steps { grid-template-columns: 1fr; }
+  }
+  .step {
+    border-left: 2px solid var(--line);
+    padding-left: 1.25rem;
+  }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--stamp);
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+  .step h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin: 0 0 0.5rem;
+  }
+  .step p { color: var(--ink-soft); margin: 0; font-size: 0.95rem; }
+
+  /* ---------- example lead / case file ---------- */
+  .case-file {
+    position: relative;
+    max-width: 34rem;
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 1.5rem 1.6rem 1.7rem;
+  }
+  .case-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+    border-bottom: 1px dashed var(--line);
+    padding-bottom: 0.8rem;
+    margin-bottom: 0.9rem;
+  }
+  .case-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+  }
+  .case-meta {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+  }
+  .case-evidence {
+    background: var(--paper-deep);
+    border-left: 3px solid var(--stamp);
+    border-radius: 0 2px 2px 0;
+    padding: 0.75rem 0.95rem;
+    margin-bottom: 0.85rem;
+  }
+  .case-evidence blockquote {
+    margin: 0 0 0.5rem;
+    font-size: 0.96rem;
+    line-height: 1.5;
+    quotes: "\201C" "\201D";
+  }
+  .case-evidence blockquote::before { content: open-quote; color: var(--stamp); }
+  .case-evidence blockquote::after { content: close-quote; color: var(--stamp); }
+  .case-citation {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--stamp);
+  }
+  .case-footnote {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+  .specimen {
+    position: absolute;
+    top: 1.3rem;
+    right: 1.3rem;
+    border: 2.5px solid var(--stamp);
+    color: var(--stamp);
+    border-radius: 4px;
+    padding: 0.25rem 0.6rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transform: rotate(6deg);
+    opacity: 0.85;
+    pointer-events: none;
+  }
+
+  /* ---------- categories ---------- */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  @media (max-width: 56rem) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 32rem) { .cat-grid { grid-template-columns: 1fr; } }
+  .cat {
+    background: var(--paper-card);
+    padding: 1.2rem 1.25rem;
+  }
+  .cat-label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0 0 0.4rem;
+  }
+  .cat-desc {
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .pricing-line {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .pricing-line .price {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--ink);
+  }
+
+  /* ---------- subscribe band ---------- */
+  .subscribe-band {
+    background: var(--paper-deep);
+    border-radius: 4px;
+    padding: 2.4rem 2rem;
+    text-align: center;
+  }
+  .subscribe-band h2 { margin-bottom: 0.6rem; }
+  .subscribe-band p {
+    color: var(--ink-soft);
+    max-width: 40ch;
+    margin: 0 auto 1.6rem;
+  }
+
+  /* ---------- contact ---------- */
+  .contact-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+  .contact-row a.email {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    text-decoration: none;
+    border-bottom: 1px solid var(--stamp);
+    color: var(--ink);
+  }
+
+  /* ---------- footer ---------- */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 2.2rem 0 3rem;
+  }
+  .disclaimer {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0 0 1.4rem;
+  }
+  .sources {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    opacity: 0.85;
+    line-height: 1.7;
+    margin: 0 0 1.4rem;
+  }
+  .copyright {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap masthead-row">
+    <div class="wordmark">Restaurant Violation Leads <span class="tag">Public record</span></div>
+    <nav class="primary">
+      <a href="#how-it-works">How it works</a>
+      <a href="#example">Example</a>
+      <a href="#categories">Categories</a>
+      <a href="#contact">Contact</a>
+      <a class="btn solid" href="#subscribe">Subscribe</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" style="border-top: none;">
+    <div class="hero-stamp"><span>Public<br>record<br>on file</span></div>
+    <p class="eyebrow">Kansas City metro, Missouri</p>
+    <h1>Every restaurant health inspection here is public. We turn the ones that matter into leads for you.</h1>
+    <p class="hero-sub">
+      A weekly, category-sorted list of restaurants that just had a
+      pest, refrigeration, plumbing, or sanitation finding — pulled
+      straight from government inspection records across five Missouri
+      jurisdictions, not a purchased mailing list.
+    </p>
+    <div class="hero-actions">
+      <a class="btn solid" href="#subscribe">Subscribe — $99/mo</a>
+      <a class="btn" href="#example">See a sample lead</a>
+    </div>
+    <p class="credibility">
+      <b>Five jurisdictions, one weekly sheet:</b> Jackson, Clay, Platte
+      &amp; Cass Counties, plus Kansas City itself. Every lead carries the
+      exact inspector's citation and quoted finding as evidence.
+    </p>
+  </section>
+
+  <section id="how-it-works" class="wrap">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2>How it works</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">Collect</span>
+        <h3>Public records, every week</h3>
+        <p>Inspection reports are pulled directly from five Missouri
+          county and city health department portals — public data,
+          collected on a respectful, rate-limited schedule.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">Classify</span>
+        <h3>Rules, not guesswork</h3>
+        <p>Each violation is matched against its citation code and the
+          inspector's own written finding to sort it into the vendor
+          category that would actually want the lead.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">Deliver</span>
+        <h3>One sheet, your category</h3>
+        <p>You get a short, filtered list every Monday — just the
+          restaurants with findings in the category you sell to, with the
+          evidence attached.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="example" class="wrap">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2>What a lead looks like</h2>
+    </div>
+    <p class="section-intro">
+      A composite, illustrative example in the same format every real
+      lead ships in — not an actual establishment or a real inspection
+      record.
+    </p>
+    <div class="case-file">
+      <span class="specimen">Sample</span>
+      <div class="case-head">
+        <span class="case-name">A quick-serve restaurant</span>
+        <span class="case-meta">Suburban Kansas City, MO</span>
+      </div>
+      <div class="case-evidence">
+        <blockquote>Effective pest control measures not in place. Observed rodent droppings along the baseboard near dry storage.</blockquote>
+        <span class="case-citation">MFC 6-501.111 — controlling pests</span>
+      </div>
+      <p class="case-footnote">This is the evidence a pest control lead ships with — the exact citation and the inspector's own words, every time.</p>
+    </div>
+  </section>
+
+  <section id="categories" class="wrap">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h2>Categories &amp; pricing</h2>
+    </div>
+    <p class="section-intro">
+      Nine vendor categories, built from real Missouri Food Code citation
+      patterns. Subscribe to the one you sell to.
+    </p>
+    <div class="cat-grid">
+      <div class="cat"><p class="cat-label">Pest Control</p><p class="cat-desc">Live pests, droppings, or failed exclusion — the most urgent, fastest-converting category.</p></div>
+      <div class="cat"><p class="cat-label">Refrigeration &amp; HVAC</p><p class="cat-desc">Coolers and freezers that failed a temperature check — often a fixable equipment fault.</p></div>
+      <div class="cat"><p class="cat-label">Plumbing &amp; Backflow</p><p class="cat-desc">Vacuum breakers, backflow prevention, and plumbing cited as leaking or in disrepair.</p></div>
+      <div class="cat"><p class="cat-label">Hood &amp; Grease-Trap</p><p class="cat-desc">Grease buildup on exhaust hoods, filters, and grease traps.</p></div>
+      <div class="cat"><p class="cat-label">Janitorial &amp; Sanitation</p><p class="cat-desc">Missing soap, paper towels, or blocked handsinks — recurring supply gaps.</p></div>
+      <div class="cat"><p class="cat-label">Food Safety Training</p><p class="cat-desc">Lapsed certified-manager credentials and expired food-handler permits.</p></div>
+      <div class="cat"><p class="cat-label">Warewash Chemical</p><p class="cat-desc">Sanitizer concentration and dish-machine temperature failures.</p></div>
+      <div class="cat"><p class="cat-label">Storage &amp; Shelving</p><p class="cat-desc">Food and supplies cited for improper floor storage.</p></div>
+      <div class="cat"><p class="cat-label">Turnaround Consulting</p><p class="cat-desc">Closures, suspensions, and repeat critical violations.</p></div>
+    </div>
+    <p class="pricing-line"><span class="price">$99</span> / month, per category · cancel anytime</p>
+  </section>
+
+  <section id="subscribe" class="wrap">
+    <div class="subscribe-band">
+      <h2>Get next Monday's list</h2>
+      <p>Pick your category and ZIP codes at checkout. First sheet arrives the following Monday.</p>
+      <!-- TODO: replace "#" with the live Stripe Payment Link once created -->
+      <a class="btn solid" href="#" style="font-size:0.95rem; padding:0.85rem 1.8rem;">Subscribe — $99/mo</a>
+    </div>
+  </section>
+
+  <section id="contact" class="wrap">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h2>Questions before you subscribe?</h2>
+    </div>
+    <div class="contact-row">
+      <a class="email" href="mailto:hello@restaurantviolationleads.com">hello@restaurantviolationleads.com</a>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p class="disclaimer">
+    Inspection data is a snapshot in time, sourced from Missouri public
+    records. A single inspection is not a judgment of an establishment —
+    many findings are corrected on the spot, as inspectors themselves
+    note in their reports.
+  </p>
+  <p class="sources">
+    Sources: Jackson County Environmental Health · Cass County Health
+    Department · Kansas City MO Health Department · Clay County Public
+    Health Center · Platte County Health Department
+  </p>
+  <p class="copyright">Restaurant Violation Leads · Kansas City metro, MO</p>
+</footer>
+
+</body>
+</html>
